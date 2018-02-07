@@ -99,6 +99,10 @@ func cmdAdd(alias string) error {
 	}
 	directory = scanner.Text()
 
+	if len(directory) == 0 {
+		directory, _ = os.Getwd()
+	}
+
 	if cfg.Aliases == nil {
 		cfg.Aliases = map[string]string{alias: directory}
 	} else {
