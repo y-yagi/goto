@@ -13,6 +13,7 @@ import (
 )
 
 const (
+	// VERSION is a version of this app
 	VERSION = "0.0.1"
 )
 
