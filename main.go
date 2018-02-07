@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 )
@@ -142,13 +143,30 @@ func cmdGoto(alias string) error {
 		return err
 	}
 
-	directory := cfg.Aliases[alias]
+	directory := detectDirectory(alias, cfg.Aliases)
 	if len(directory) == 0 {
 		return fmt.Errorf("'%s' is not registered", alias)
 	}
 
 	fmt.Fprintf(os.Stdout, "%s", directory)
 	return nil
+}
+
+func detectDirectory(alias string, aliases map[string]string) string {
+	directory := aliases[alias]
+
+	if len(directory) != 0 {
+		return directory
+	}
+
+	for k, v := range aliases {
+		if strings.HasPrefix(k, alias) {
+			directory = v
+			break
+		}
+	}
+
+	return directory
 }
 
 func run() int {
