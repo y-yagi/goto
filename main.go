@@ -29,7 +29,7 @@ func msg(err error) int {
 
 func cmdAdd(alias string) error {
 	var cfg config
-	err := configure.Load("goto", cfg)
+	err := configure.Load("goto", &cfg)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func cmdAdd(alias string) error {
 
 func cmdDelete(alias string) error {
 	var cfg config
-	err := configure.Load("goto", cfg)
+	err := configure.Load("goto", &cfg)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func cmdDelete(alias string) error {
 
 func cmdShowAll() error {
 	var cfg config
-	err := configure.Load("goto", cfg)
+	err := configure.Load("goto", &cfg)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func cmdShowAll() error {
 
 func cmdGoto(alias string) error {
 	var cfg config
-	err := configure.Load("goto", cfg)
+	err := configure.Load("goto", &cfg)
 	if err != nil {
 		return err
 	}
