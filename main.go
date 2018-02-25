@@ -6,35 +6,16 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
-	"runtime"
-	"strings"
 
-	"github.com/BurntSushi/toml"
+	"github.com/y-yagi/configure"
 )
 
 const (
-	// VERSION is a version of this app
 	VERSION = "0.0.1"
 )
 
 type config struct {
 	Aliases map[string]string `toml:"aliases"`
-}
-
-func configDir() string {
-	var dir string
-
-	if runtime.GOOS == "windows" {
-		dir = os.Getenv("APPDATA")
-		if dir == "" {
-			dir = filepath.Join(os.Getenv("USERPROFILE"), "Application Data", "goto")
-		}
-		dir = filepath.Join(dir, "goto")
-	} else {
-		dir = filepath.Join(os.Getenv("HOME"), ".config", "goto")
-	}
-	return dir
 }
 
 func msg(err error) int {
@@ -45,43 +26,9 @@ func msg(err error) int {
 	return 0
 }
 
-func (cfg *config) load() error {
-	dir := configDir()
-	if err := os.MkdirAll(dir, 0700); err != nil {
-		return fmt.Errorf("cannot create directory: %v", err)
-	}
-	file := filepath.Join(dir, "config.toml")
-
-	_, err := os.Stat(file)
-	if err == nil {
-		_, err := toml.DecodeFile(file, cfg)
-		if err != nil {
-			return err
-		}
-		return nil
-	}
-
-	if !os.IsNotExist(err) {
-		return err
-	}
-
-	return nil
-}
-
-func (cfg *config) save() error {
-	dir := configDir()
-	file := filepath.Join(dir, "config.toml")
-
-	f, err := os.Create(file)
-	if err != nil {
-		return err
-	}
-	return toml.NewEncoder(f).Encode(cfg)
-}
-
 func cmdAdd(alias string) error {
 	var cfg config
-	err := cfg.load()
+	err := configure.Load("goto", cfg)
 	if err != nil {
 		return err
 	}
@@ -100,32 +47,29 @@ func cmdAdd(alias string) error {
 	}
 	directory = scanner.Text()
 
-	if len(directory) == 0 {
-		directory, _ = os.Getwd()
-	}
-
 	if cfg.Aliases == nil {
 		cfg.Aliases = map[string]string{alias: directory}
 	} else {
 		cfg.Aliases[alias] = directory
 	}
-	return cfg.save()
+
+	return configure.Save("goto", cfg)
 }
 
 func cmdDelete(alias string) error {
 	var cfg config
-	err := cfg.load()
+	err := configure.Load("goto", cfg)
 	if err != nil {
 		return err
 	}
 
 	delete(cfg.Aliases, alias)
-	return cfg.save()
+	return configure.Save("goto", cfg)
 }
 
 func cmdShowAll() error {
 	var cfg config
-	err := cfg.load()
+	err := configure.Load("goto", cfg)
 	if err != nil {
 		return err
 	}
@@ -138,35 +82,18 @@ func cmdShowAll() error {
 
 func cmdGoto(alias string) error {
 	var cfg config
-	err := cfg.load()
+	err := configure.Load("goto", cfg)
 	if err != nil {
 		return err
 	}
 
-	directory := detectDirectory(alias, cfg.Aliases)
+	directory := cfg.Aliases[alias]
 	if len(directory) == 0 {
 		return fmt.Errorf("'%s' is not registered", alias)
 	}
 
 	fmt.Fprintf(os.Stdout, "%s", directory)
 	return nil
-}
-
-func detectDirectory(alias string, aliases map[string]string) string {
-	directory := aliases[alias]
-
-	if len(directory) != 0 {
-		return directory
-	}
-
-	for k, v := range aliases {
-		if strings.HasPrefix(k, alias) {
-			directory = v
-			break
-		}
-	}
-
-	return directory
 }
 
 func run() int {
