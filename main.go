@@ -57,6 +57,15 @@ func cmdAdd(alias string) error {
 	return configure.Save("goto", cfg)
 }
 
+func cmdEdit() error {
+	editor := os.Getenv("EDITOR")
+	if len(editor) == 0 {
+		editor = "vim"
+	}
+
+	return configure.Edit("goto", editor)
+}
+
 func cmdDelete(alias string) error {
 	var cfg config
 	err := configure.Load("goto", &cfg)
@@ -100,11 +109,13 @@ func cmdGoto(alias string) error {
 func run() int {
 	var showVersion bool
 	var showAliases bool
+	var editAliases bool
 	var addAlias string
 	var deleteAlias string
 
 	flag.BoolVar(&showVersion, "v", false, "show version")
 	flag.BoolVar(&showAliases, "s", false, "show all aliases")
+	flag.BoolVar(&editAliases, "c", false, "edit aliases")
 	flag.StringVar(&addAlias, "a", "", "add alias")
 	flag.StringVar(&deleteAlias, "d", "", "delete alias")
 	flag.Parse()
@@ -116,6 +127,10 @@ func run() int {
 
 	if showAliases {
 		return msg(cmdShowAll())
+	}
+
+	if editAliases {
+		return msg(cmdEdit())
 	}
 
 	if len(addAlias) > 0 {
