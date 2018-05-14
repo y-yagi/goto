@@ -48,6 +48,13 @@ func cmdAdd(alias string) error {
 	}
 	directory = scanner.Text()
 
+	if len(directory) == 0 {
+		wd, err := os.Getwd()
+		if err == nil {
+			directory = wd
+		}
+	}
+
 	if cfg.Aliases == nil {
 		cfg.Aliases = map[string]string{alias: directory}
 	} else {
