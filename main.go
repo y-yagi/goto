@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/y-yagi/configure"
 )
@@ -104,13 +105,29 @@ func cmdGoto(alias string) error {
 		return err
 	}
 
-	directory := cfg.Aliases[alias]
-	if len(directory) == 0 {
-		return fmt.Errorf("'%s' is not registered", alias)
+	dir := cfg.Aliases[alias]
+	if len(dir) != 0 {
+		fmt.Fprintf(os.Stdout, "%s", dir)
+		return nil
 	}
 
-	fmt.Fprintf(os.Stdout, "%s", directory)
-	return nil
+	var maybe string
+	for key, dir := range cfg.Aliases {
+		if strings.HasPrefix(key, alias) {
+			if len(maybe) != 0 {
+				// If multiple aliases matched, do not use all.
+				return fmt.Errorf("'%s' is not registered", alias)
+			}
+			maybe = dir
+		}
+	}
+
+	if len(maybe) != 0 {
+		fmt.Fprintf(os.Stdout, "%s", maybe)
+		return nil
+	}
+
+	return fmt.Errorf("'%s' is not registered", alias)
 }
 
 func run() int {
