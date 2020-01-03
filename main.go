@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/y-yagi/configure"
+	"github.com/y-yagi/goext/arr"
 )
 
 const (
@@ -111,20 +112,18 @@ func cmdGoto(alias string) error {
 		return nil
 	}
 
-	var maybe string
-	for key, dir := range cfg.Aliases {
+	var maybe []string
+	for key, _ := range cfg.Aliases {
 		if strings.HasPrefix(key, alias) {
-			if len(maybe) != 0 {
-				// If multiple aliases matched, do not use all.
-				return fmt.Errorf("'%s' is not registered", alias)
-			}
-			maybe = dir
+			maybe = append(maybe, key)
 		}
 	}
 
-	if len(maybe) != 0 {
-		fmt.Fprintf(os.Stdout, "%s", maybe)
+	if len(maybe) == 1 {
+		fmt.Fprintf(os.Stdout, "%s", cfg.Aliases[maybe[0]])
 		return nil
+	} else if len(maybe) > 1 {
+		return fmt.Errorf("Did you mean '%s'?", arr.Join(maybe, ", "))
 	}
 
 	return fmt.Errorf("'%s' is not registered", alias)
