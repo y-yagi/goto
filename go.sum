@@ -1,0 +1,10 @@
+github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/google/go-cmp v0.3.1 h1:Xye71clBPdm5HgqGwUkwhbynsUJZhDbS20FvLhQ2izg=
+github.com/google/go-cmp v0.3.1/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
+github.com/pelletier/go-toml v1.8.1 h1:1Nf83orprkJyknT6h7zbuEGUEjcyVlCxSUGTENmNCRM=
+github.com/pelletier/go-toml v1.8.1/go.mod h1:T2/BmBdy8dvIRq1a/8aqjN41wvWlN4lrapLU/GW4pbc=
+github.com/y-yagi/configure v0.3.0 h1:wPnzJ3/sYzT6HM69VgN+W7De7RreY4V0Z+zjhddANic=
+github.com/y-yagi/configure v0.3.0/go.mod h1:yAbu6cV1EUgS3kKEuYGc0KRv3aRDhIeBghGfSe5uWZY=
+github.com/y-yagi/goext v0.6.0 h1:kOa5CbcuZlVzjQM5U2EH16pu6P6tWc7/XQrIxlCyltM=
+github.com/y-yagi/goext v0.6.0/go.mod h1:n/8nSrIm39oaYJr+mJxMOS/VuAL4ZF6ZMAevjv5DdI4=
