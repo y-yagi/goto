@@ -113,7 +113,7 @@ func cmdGoto(alias string) error {
 	}
 
 	var maybe []string
-	for key, _ := range cfg.Aliases {
+	for key := range cfg.Aliases {
 		if strings.HasPrefix(key, alias) {
 			maybe = append(maybe, key)
 		}
