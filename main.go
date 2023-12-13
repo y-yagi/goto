@@ -170,8 +170,6 @@ func run() int {
 	}
 
 	return msg(cmdGoto(flag.Args()[0]))
-
-	return 0
 }
 
 func main() {
